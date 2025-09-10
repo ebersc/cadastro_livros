@@ -2,11 +2,11 @@ let baseUrl = $("#base_url").val();
 $(document).ready(function () {
 
     $("#btnSalvar").on('click', function () {
-        var form = $('#formLivro')[0];
+        var form = $('#formAutor')[0];
         var formData = new FormData(form);
 
         $.ajax({
-            url: `${baseUrl}livro/salvar`,
+            url: `${baseUrl}autor/salvar`,
             data: formData,
             processData: false,
             contentType: false,
@@ -16,30 +16,24 @@ $(document).ready(function () {
                     title: "Registro salvo com sucesso!",
                     icon: "success"
                 }).then((result) => {
-                    location.href = `${baseUrl}livro`;
+                    location.href = `${baseUrl}autor`;
                 });
             }
         });
     });
 
     $("#btnCancelar").on('click', function(){
-        location.href = `${baseUrl}livro`;
+        location.href = `${baseUrl}autor`;
     })
-
-    $("#valor").mask('000.000.000,00', {reverse: true}).trigger('input');
-
-    $("#anopublicacao").mask('####');
-    
-    $("#edicao").mask("#");
 });
 
-function editarLivro(codl) {
-    location.href = `${baseUrl}livro/editar/${codl}`;
+function editarAutor(codau) {
+    location.href = `${baseUrl}autor/editar/${codau}`;
 }
 
-function excluirLivro(codl) {
+function excluirAutor(codau) {
     Swal.fire({
-        title: "Deseja excluir esse livro?",
+        title: "Deseja excluir esse autor?",
         text: "Essa ação não pode ser desfeita!",
         icon: "question",
         showCancelButton: true,
@@ -50,8 +44,8 @@ function excluirLivro(codl) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: `${baseUrl}livro/deletar`,
-                data: JSON.stringify({ 'codl': codl }),
+                url: `${baseUrl}autor/deletar`,
+                data: JSON.stringify({ 'codau': codau }),
                 processData: false,
                 contentType: false,
                 type: 'DELETE',

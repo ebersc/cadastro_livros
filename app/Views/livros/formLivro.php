@@ -35,31 +35,25 @@
                                                 </div>
                                                 <div class="mb-2">
                                                     <label for="anopublicacao">Ano de publicação:</label>
-                                                    <input type="text" class="form-control" id="anopublicacao" name="anopublicacao" placeholder="Ano publicação" value="<?= isset($livro[0]['anopublicacao']) ? $livro[0]['anopublicacao'] : '' ?>">
+                                                    <input type="text" class="form-control" id="anopublicacao" name="anopublicacao" maxlength="4" placeholder="Ano publicação" value="<?= isset($livro[0]['anopublicacao']) ? $livro[0]['anopublicacao'] : '' ?>">
                                                 </div>
                                                 <div class="mb-2">
                                                     <label for="valor">Valor:</label>
-                                                    <input type="text" class="form-control" id="valor" name="valor" placeholder="Valor R$" value="<?= isset($livro[0]['valor']) ? $livro[0]['valor'] : '' ?>">
+                                                    <input type="text" class="form-control" id="valor" name="valor" placeholder="Valor R$" value="<?= isset($livro[0]['valor']) ? number_format($livro[0]['valor'], 2, ',', '.') : '' ?>">
                                                 </div>
                                                 <div class="mb-2">
-                                                    <label for="autor">Autor:</label>
-                                                    <select class="form-control" id="autor" name="autor" placeholder="Selecione um autor">
-                                                        <option value ="">
-                                                            --- Selecione um autor ----
-                                                        </option>
+                                                    <label for="autor">Autor(es):</label>
+                                                    <select class="form-control selectpicker" multiple data-live-search="true" id="autor" name="autor[]" title=" --- Selecione um ou mais autores ----">
                                                         <?php foreach($autores as $key => $autor){ ?>
-                                                            <option value="<?= $autor['codau'] ?>" <?= (isset($livro[0]) && $livro[0]['autor_codau'] == $autor['codau']) ? 'selected' : '' ?> ><?= $autor['nome'] ?></option>
+                                                            <option value="<?= $autor['codau'] ?>" <?= (isset($livro[0]) && in_array($autor['codau'], $livro[0]['autor_codau'])) ? 'selected' : '' ?> ><?= $autor['nome'] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
                                                 <div class="mb-2">
-                                                    <label for="assunto">Assunto:</label>
-                                                    <select class="form-control" id="assunto" name="assunto" placeholder="Selecione um Assunto">
-                                                        <option value ="">
-                                                            --- Selecione um assunto ----
-                                                        </option>
+                                                    <label for="assunto">Assunto(s):</label>
+                                                    <select class="form-control selectpicker" multiple data-live-search="true" id="assunto" name="assunto[]" title="--- Selecione um ou mais assuntos ----">
                                                         <?php foreach($assuntos as $assunto): ?>
-                                                            <option value="<?= $assunto['codas'] ?>" <?= (isset($livro[0]) && $livro[0]['assunto_codas'] == $assunto['codas']) ? 'selected' : '' ?> ><?= $assunto['descricao'] ?></option>
+                                                            <option value="<?= $assunto['codas'] ?>" <?= (isset($livro[0]) && in_array($assunto['codas'], $livro[0]['assunto_codas'])) ? 'selected' : '' ?> ><?= $assunto['descricao'] ?></option>
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>

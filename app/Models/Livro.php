@@ -31,8 +31,8 @@ class Livro extends MY_Model
                 l.edicao,
                 l.valor,
                 l.anopublicacao,
-                la.assunto_codas,
-                lau.autor_codau
+                GROUP_CONCAT(DISTINCT la.assunto_codas) AS assunto_codas,
+                GROUP_CONCAT(DISTINCT  lau.autor_codau) AS  autor_codau
             FROM {$this->table} l
                 LEFT JOIN
                     livro_assunto la ON l.codl = la.livro_codl
@@ -40,6 +40,7 @@ class Livro extends MY_Model
                     livro_autor lau ON l.codl = lau.livro_codl
 			WHERE
 				l.codl = $id
+            GROUP BY l.codl, l.valor, l.titulo, l.editora, l.edicao, l.anopublicacao
 SQL;
 		return $this->executarSql($sql);
     }

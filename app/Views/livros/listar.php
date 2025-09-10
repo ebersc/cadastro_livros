@@ -19,6 +19,7 @@
                         <th>Editora</th>
                         <th>Edição</th>
                         <th>Ano de publicação</th>
+                        <th>Valor R$</th>
                         <th>Ações</th>
                     </thead>
                     <tbody>
@@ -35,6 +36,9 @@
                                 </td>
                                 <td>
                                     <?= $livro['anopublicacao'] ?>
+                                </td>
+                                <td>
+                                    R$ <?= number_format($livro['valor'], 2, ',', '.') ?>
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-primary" onclick="editarLivro(<?= $livro['codl'] ?>)"><i class="fa fa-pencil"></i></button>

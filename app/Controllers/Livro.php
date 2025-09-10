@@ -8,13 +8,16 @@ use App\Models\Livro as LivroModel;
 use App\Models\Assunto;
 use App\Models\LivroAssunto;
 use App\Models\LivroAutor;
+use Exception;
+use Throwable;
 
 class Livro extends BaseController
 {
 	/**
 	 * Listagem dos livros cadastrados
 	 */
-    public function index(){
+	public function index()
+	{
 		$livros = (new LivroModel())->buscarTodos();
 
 		$dados = [
@@ -27,17 +30,18 @@ class Livro extends BaseController
 	/**
 	 * Exibir o formulario de cadastro
 	 */
-	public function cadastrar(){
-		
+	public function cadastrar()
+	{
+
 		$autores = (new Autor())->buscarTodos();
 		$assuntos = (new Assunto())->buscarTodos();
 
 		$dados = [
-            'base_url' => base_url(),
-            'titulo'   => 'Novo',
-            'autores'  => $autores,
-            'assuntos' => $assuntos,
-            'livro'    => []
+			'base_url' => base_url(),
+			'titulo' => 'Novo',
+			'autores' => $autores,
+			'assuntos' => $assuntos,
+			'livro' => []
 		];
 		return view('livros/formLivro', $dados);
 	}
@@ -46,18 +50,25 @@ class Livro extends BaseController
 	 * Buscar os dados do livro
 	 * @param int $id
 	 */
-	public function editar(int $id){
+	public function editar(int $id)
+	{
 
 		$livro = (new LivroModel())->buscarDadosLivro($id);
+
+		foreach ($livro as &$linha) {
+			$linha['assunto_codas'] = explode(',', $linha['assunto_codas']);
+			$linha['autor_codau']  = explode(',', $linha['autor_codau']);
+		}
+
 		$autores = (new Autor())->buscarTodos();
 		$assuntos = (new Assunto())->buscarTodos();
 
 		$dados = [
-            'base_url' => base_url(),
-            'titulo'   => 'Editar',
-            'livro'    => $livro,
-            'autores'  => $autores,
-            'assuntos' => $assuntos
+			'base_url' => base_url(),
+			'titulo' => 'Editar',
+			'livro' => $livro,
+			'autores' => $autores,
+			'assuntos' => $assuntos
 		];
 		return view('livros/formLivro', $dados);
 	}
@@ -66,19 +77,22 @@ class Livro extends BaseController
 	 * Gravar ou atualizar o livro
 	 * @return void
 	 */
-	public function salvar(){
+	public function salvar()
+	{
 		$request = \Config\Services::request();
 		$livro = $request->getPost();
-		
-		try{
-			if($livro['id']){
+
+		$livro = $this->tratarDados($livro);
+
+		try {
+			if ($livro['id']) {
 				(new LivroModel())->atualizar($livro['id'], $livro);
-				(new LivroAutor())->atualizarDados($livro);
-				(new LivroAssunto())->atualizarDados($livro);
-			}else {
+				$this->inserirAssuntos($livro);
+				$this->inserirAutores($livro);
+			} else {
 				$id = (new LivroModel())->inserir($livro);
-				(new LivroAutor())->inserir(['livro_codl' => $id, 'autor_codau' => $livro['autor']]);
-				(new LivroAssunto())->inserir(['livro_codl' => $id, 'assunto_codas' => $livro['assunto']]);
+				$this->inserirAssuntos($livro, $id);
+				$this->inserirAutores($livro, $id);
 			}
 
 			echo json_encode([
@@ -98,6 +112,10 @@ class Livro extends BaseController
 				'message' => "Erro ao salvar o livro!"
 			]);
 		} catch (\Exception $e) {
+						echo '<pre>';
+			print_r($e->getMessage());
+			echo '</pre>';
+			die();
 			echo json_encode([
 				'status' => 500,
 				'message' => "Erro ao salvar o livro!"
@@ -110,14 +128,15 @@ class Livro extends BaseController
 	 * @param int codl
 	 * @return void
 	 */
-	public function excluir(){
-		try{
+	public function excluir()
+	{
+		try {
 			$id = $this->request->getJSON(true)['codl'];
 
 			(new LivroAutor())->excluirLivroAutor($id);
 
 			(new LivroAssunto())->excluirLivroAssunto($id);
-			
+
 			(new LivroModel())->excluir($id);
 
 			echo json_encode([
@@ -141,6 +160,48 @@ class Livro extends BaseController
 				'status' => 500,
 				'message' => "Erro ao excluir o livro!"
 			]);
+		}
+	}
+
+	private function tratarDados(array $dados)
+	{
+		if (isset($dados['valor'])) {
+			$valor = str_replace(['.', ','], ['', '.'], $dados['valor']);
+
+			$dados['valor'] = floatval($valor);
+		}
+
+		return $dados;
+	}
+
+	private function inserirAutores(array $livro, int $id = null)
+	{
+		try {
+			$id = ($id ?? $livro['id']);
+
+			(new LivroAutor())->excluirLivroAutor($id);
+
+			foreach ($livro['autor'] as $key => $value) {
+				(new LivroAutor())->inserir(['livro_codl' => $id, 'autor_codau' => $value]);
+			}
+
+		} catch (Throwable $th) {
+			throw $th;
+		}
+	}
+
+	private function inserirAssuntos(array $livro, int $id = null)
+	{
+		try {
+			$id = ($id ?? $livro['id']);
+
+			(new LivroAssunto())->excluirLivroAssunto($id);
+
+			foreach ($livro['assunto'] as $key => $value) {
+				(new LivroAssunto())->inserir(['livro_codl' => $id, 'assunto_codas' => $value]);
+			}
+		} catch (Throwable $th) {
+			throw $th;
 		}
 	}
 }
