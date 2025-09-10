@@ -112,10 +112,6 @@ class Livro extends BaseController
 				'message' => "Erro ao salvar o livro!"
 			]);
 		} catch (\Exception $e) {
-						echo '<pre>';
-			print_r($e->getMessage());
-			echo '</pre>';
-			die();
 			echo json_encode([
 				'status' => 500,
 				'message' => "Erro ao salvar o livro!"
