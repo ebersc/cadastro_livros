@@ -3,10 +3,17 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\Autor;
 use App\Models\Livro as LivroModel;
+use App\Models\Assunto;
+use App\Models\LivroAssunto;
+use App\Models\LivroAutor;
 
 class Livro extends BaseController
 {
+	/**
+	 * Listagem dos livros cadastrados
+	 */
     public function index(){
 		$livros = (new LivroModel())->buscarTodos();
 
@@ -16,64 +23,123 @@ class Livro extends BaseController
 		];
 		return view('livros/listar', $dados);
 	}
+
+	/**
+	 * Exibir o formulario de cadastro
+	 */
 	public function cadastrar(){
+		
+		$autores = (new Autor())->buscarTodos();
+		$assuntos = (new Assunto())->buscarTodos();
+
 		$dados = [
             'base_url' => base_url(),
             'titulo'   => 'Novo',
-            'autores'  => [],
-            'assuntos' => []
+            'autores'  => $autores,
+            'assuntos' => $assuntos,
+            'livro'    => []
 		];
 		return view('livros/formLivro', $dados);
 	}
 
-	public function editar($idItem){
+	/**
+	 * Buscar os dados do livro
+	 * @param int $id
+	 */
+	public function editar(int $id){
 
-		$item = (new Item())->buscarDadosItem($idItem);
+		$livro = (new LivroModel())->buscarDadosLivro($id);
+		$autores = (new Autor())->buscarTodos();
+		$assuntos = (new Assunto())->buscarTodos();
 
 		$dados = [
-			'base_url' => base_url(),
-			'usuario' => $this->session->get('usuario'),
-			'titulo' => 'Editar',
-			'item' => $item
+            'base_url' => base_url(),
+            'titulo'   => 'Editar',
+            'livro'    => $livro,
+            'autores'  => $autores,
+            'assuntos' => $assuntos
 		];
-		return view('itens/formLivro', $dados);
+		return view('livros/formLivro', $dados);
 	}
 
+	/**
+	 * Gravar ou atualizar o livro
+	 * @return void
+	 */
 	public function salvar(){
 		$request = \Config\Services::request();
-		$item = $request->getPost();
-
-		$item['valor_individual'] = str_replace([',', ' ', 'R$'], ['.', '', ''], $item['valor_individual']);
-
+		$livro = $request->getPost();
+		
 		try{
-			if($item['id']){
-				(new Item())->atualizar($item['id'], $item);
+			if($livro['id']){
+				(new LivroModel())->atualizar($livro['id'], $livro);
+				(new LivroAutor())->atualizarDados($livro);
+				(new LivroAssunto())->atualizarDados($livro);
 			}else {
-				$id = (new Item())->inserir($item);
+				$id = (new LivroModel())->inserir($livro);
+				(new LivroAutor())->inserir(['livro_codl' => $id, 'autor_codau' => $livro['autor']]);
+				(new LivroAssunto())->inserir(['livro_codl' => $id, 'assunto_codas' => $livro['assunto']]);
 			}
+
 			echo json_encode([
 				'status' => 200,
 				'message' => "Dados inseridos com sucesso!"
 			]);
-		}catch(\Exception $ex){
-			throw $ex;
+		} catch (\CodeIgniter\Database\Exceptions\DataException $e) {
+			log_message('error', 'Erro de dados: ' . $e->getMessage());
+			echo json_encode([
+				'status' => 500,
+				'message' => "Erro ao salvar o livro!"
+			]);
+		} catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+			log_message('error', 'Erro de banco: ' . $e->getMessage());
+			echo json_encode([
+				'status' => 500,
+				'message' => "Erro ao salvar o livro!"
+			]);
+		} catch (\Exception $e) {
+			echo json_encode([
+				'status' => 500,
+				'message' => "Erro ao salvar o livro!"
+			]);
 		}
 	}
 
+	/**
+	 * Excluir o Livro
+	 * @param int codl
+	 * @return void
+	 */
 	public function excluir(){
 		try{
-			$request = \Config\Services::request();
+			$id = $this->request->getJSON(true)['codl'];
 
-			$id = $request->getPost('id');
-			(new Item())->excluir($id);
+			(new LivroAutor())->excluirLivroAutor($id);
+
+			(new LivroAssunto())->excluirLivroAssunto($id);
+			
+			(new LivroModel())->excluir($id);
+
 			echo json_encode([
 				'status' => 200,
 				'message' => "Livro excluido com sucesso!"
 			]);
-		}catch(\Exception $ex){
+		} catch (\CodeIgniter\Database\Exceptions\DataException $e) {
+			log_message('error', 'Erro de dados: ' . $e->getMessage());
 			echo json_encode([
 				'status' => 500,
-				'message' => "Livro ao excluir o item!"
+				'message' => "Erro ao excluir o livro!"
+			]);
+		} catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+			log_message('error', 'Erro de banco: ' . $e->getMessage());
+			echo json_encode([
+				'status' => 500,
+				'message' => "Erro ao excluir o livro!"
+			]);
+		} catch (\Exception $e) {
+			echo json_encode([
+				'status' => 500,
+				'message' => "Erro ao excluir o livro!"
 			]);
 		}
 	}

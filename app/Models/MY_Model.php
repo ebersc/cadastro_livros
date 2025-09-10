@@ -69,7 +69,7 @@ class MY_Model extends Model
             $campos = $this->db->getFieldNames($tabela);
             foreach ($campos as $campo) {
                 // Evita conflito com campos da principal
-                if (!in_array($campo, ['id', 'ativo'])) {
+                if (!in_array($campo, ['codl'])) {
                     // Se tiver alias para a coluna, usa ele
                     if (isset($aliasColunas[$campo])) {
                         $builder->select("{$tabela}.{$campo} AS {$aliasColunas[$campo]}");
@@ -88,11 +88,15 @@ class MY_Model extends Model
     }
 
     public function executarSql(string $sql): array{
-        $query=$this->db->query($sql);
+        $query = $this->db->query($sql);
         return $query->getResultArray();
     }
 
     public function executar(string $sql){
-        $query=$this->db->query($sql);
+        return $this->db->query($sql);
+    }
+
+    protected function verificaDadoExiste(int $codl){
+        return count($this->buscarComFiltro(['livro_codl' => $codl])) > 0;
     }
 }
