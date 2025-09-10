@@ -24,8 +24,120 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
-        <?= $this->renderSection('style') ?>
+        /* Estilos para submenus */
+        .collapse-inner {
+            border-radius: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.1); /* Fundo branco semi-transparente */
+            padding: 0.5rem 0;
+            margin: 0.5rem 1rem;
+            border-left: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+        }
+
+        /* Estilos para os itens do submenu */
+        .collapse-item {
+            padding: 0.75rem 1.25rem;
+            margin: 0.1rem 0.5rem;
+            display: block;
+            color: rgba(255, 255, 255) !important;
+            text-decoration: none !important;
+            border-radius: 0.35rem;
+            white-space: nowrap;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            background: rgba(255, 255, 255, 0.05); /* Fundo ainda mais sutil para cada item */
+            transition: all 0.2s ease-in-out;
+        }
+
+        .collapse-item:hover {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.2) !important; /* Fundo mais opaco no hover */
+            text-decoration: none !important;
+            transform: translateX(5px); /* Pequeno movimento para a direita */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .collapse-item:focus {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            outline: none;
+        }
+
+        /* Item ativo no submenu */
+        .collapse-item.active {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.25) !important;
+            font-weight: bold;
+            border-left: 3px solid #fff;
+        }
+
+        /* Ajustar espaçamento dos ícones no submenu */
+        .collapse-item i {
+            width: 1.2rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .collapse-item:hover i {
+            opacity: 1;
+        }
+
+        /* Para o efeito me-2 (margin-end) */
+        .collapse-item .me-2 {
+            margin-right: 0.5rem;
+        }
+
+        /* Seta para indicar submenu */
+        .nav-link[data-toggle="collapse"]::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free';
+            font-weight: 900;
+            float: right;
+            transition: transform 0.3s ease-in-out;
+            margin-left: auto;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .nav-link[data-toggle="collapse"]:hover::after {
+            opacity: 1;
+        }
+
+        .nav-link[data-toggle="collapse"][aria-expanded="true"]::after {
+            transform: rotate(180deg);
+        }
+
+        .nav-link[data-toggle="collapse"] {
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link[data-toggle="collapse"] span {
+            flex-grow: 1;
+        }
+
+        /* Animação suave para o colapso */
+        .collapse {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Variação mais escura (opcional) */
+        .collapse-inner.dark {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .collapse-inner.dark .collapse-item {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .collapse-inner.dark .collapse-item:hover {
+            background-color: rgba(0, 0, 0, 0.3) !important;
+        }
     </style>
+    <?= $this->renderSection('style') ?>
 
 </head>
 
