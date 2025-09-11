@@ -44,4 +44,20 @@ class Livro extends MY_Model
 SQL;
 		return $this->executarSql($sql);
     }
+
+    public function montarQueryRelatorio(string $where){
+
+        $where = !empty($where) ? (" AND " . $where) : ""; 
+
+        $sql = <<<SQL
+            SELECT
+                *
+            FROM
+                vw_relatorio_cad_livros
+            WHERE
+                1 = 1
+                {$where}
+SQL;
+        return $sql;
+    }
 }

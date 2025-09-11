@@ -1,10 +1,12 @@
 <!-- Sidebar -->
-<ul
-    class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion inicio" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url() ?>">
-        <div class="sidebar-brand-icon"></div>
+        <div class="sidebar-brand-icon">
+            <i class="fas fa-home sidebar-text"></i>
+            <span>Inicio</span>
+        </div>
     </a>
 
     <!-- Divider -->

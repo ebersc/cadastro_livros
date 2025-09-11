@@ -27,3 +27,8 @@ $routes->get('/assunto/cadastrar', 'Assunto::cadastrar');
 $routes->get('/assunto/editar/(:num)', 'Assunto::editar/$1');
 $routes->post('/assunto/salvar', 'Assunto::salvar');
 $routes->delete('/assunto/deletar', 'Assunto::excluir');
+
+/* Relatorios */
+$routes->get('/relatorio', 'RelatorioLivros::index');
+$routes->post('/relatorio/gerar', 'RelatorioLivros::gerarRelatorio');
+$routes->get('/relatorio/datatables', 'RelatorioLivros::datatables');

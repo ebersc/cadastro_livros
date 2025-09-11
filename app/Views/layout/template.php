@@ -8,35 +8,28 @@
 
     <title>Cadastro de livros</title>
 
-    <!-- Custom fonts for this template-->
     <link href="<?= base_url() ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 	<link rel="shortcut icon" href="favicon.ico" />
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="<?= base_url() ?>css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <link id="bsdp-css" href="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.0.0/datatables.min.css"/>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
     <style>
-        /* Estilos para submenus */
         .collapse-inner {
             border-radius: 0.5rem;
-            background-color: rgba(255, 255, 255, 0.1); /* Fundo branco semi-transparente */
+            background-color: rgba(255, 255, 255, 0.1);
             padding: 0.5rem 0;
             margin: 0.5rem 1rem;
             border-left: 3px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-            backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
         }
 
-        /* Estilos para os itens do submenu */
         .collapse-item {
             padding: 0.75rem 1.25rem;
             margin: 0.1rem 0.5rem;
@@ -48,15 +41,15 @@
             font-size: 0.85rem;
             font-weight: 500;
             border: none;
-            background: rgba(255, 255, 255, 0.05); /* Fundo ainda mais sutil para cada item */
+            background: rgba(255, 255, 255, 0.05);
             transition: all 0.2s ease-in-out;
         }
 
         .collapse-item:hover {
             color: #fff !important;
-            background-color: rgba(255, 255, 255, 0.2) !important; /* Fundo mais opaco no hover */
+            background-color: rgba(255, 255, 255, 0.2) !important;
             text-decoration: none !important;
-            transform: translateX(5px); /* Pequeno movimento para a direita */
+            transform: translateX(5px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
@@ -66,7 +59,6 @@
             outline: none;
         }
 
-        /* Item ativo no submenu */
         .collapse-item.active {
             color: #fff !important;
             background-color: rgba(255, 255, 255, 0.25) !important;
@@ -74,7 +66,6 @@
             border-left: 3px solid #fff;
         }
 
-        /* Ajustar espaçamento dos ícones no submenu */
         .collapse-item i {
             width: 1.2rem;
             text-align: center;
@@ -85,12 +76,10 @@
             opacity: 1;
         }
 
-        /* Para o efeito me-2 (margin-end) */
         .collapse-item .me-2 {
             margin-right: 0.5rem;
         }
 
-        /* Seta para indicar submenu */
         .nav-link[data-toggle="collapse"]::after {
             content: '\f107';
             font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free';
@@ -120,12 +109,10 @@
             flex-grow: 1;
         }
 
-        /* Animação suave para o colapso */
         .collapse {
             transition: all 0.3s ease-in-out;
         }
 
-        /* Variação mais escura (opcional) */
         .collapse-inner.dark {
             background-color: rgba(0, 0, 0, 0.2);
         }
@@ -146,10 +133,10 @@
 
 <div id="wrapper">
     <?= view('layout/sidebar') ?>
-    <!-- Content Wrapper -->
+
     <div id="content-wrapper" class="d-flex flex-column">
 
-    <!-- Main Content -->
+    
     <div id="content">
 
         <?= view('layout/topbar') ?>
