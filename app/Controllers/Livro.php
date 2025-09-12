@@ -15,6 +15,7 @@ class Livro extends BaseController
 {
 	/**
 	 * Listagem dos livros cadastrados
+	 * @access public
 	 */
 	public function index()
 	{
@@ -29,6 +30,7 @@ class Livro extends BaseController
 
 	/**
 	 * Exibir o formulario de cadastro
+	 * @access public
 	 */
 	public function cadastrar()
 	{
@@ -47,8 +49,9 @@ class Livro extends BaseController
 	}
 
 	/**
-	 * Buscar os dados do livro
+	 * Buscar os dados do livro e exibir formulario de edição
 	 * @param int $id
+	 * @access public
 	 */
 	public function editar(int $id)
 	{
@@ -74,7 +77,8 @@ class Livro extends BaseController
 	}
 
 	/**
-	 * Gravar ou atualizar o livro
+	 * Salvar ou atualizar os dados do livro na base de dados
+	 * @access public
 	 * @return void
 	 */
 	public function salvar()
@@ -103,13 +107,13 @@ class Livro extends BaseController
 			log_message('error', 'Erro de dados: ' . $e->getMessage());
 			echo json_encode([
 				'status' => 500,
-				'message' => "Erro ao salvar o livro!"
+				'message' => 'Erro de dados: ' . $e->getMessage()
 			]);
 		} catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
 			log_message('error', 'Erro de banco: ' . $e->getMessage());
 			echo json_encode([
 				'status' => 500,
-				'message' => "Erro ao salvar o livro!"
+				'message' => 'Erro de banco: ' . $e->getMessage()
 			]);
 		} catch (\Exception $e) {
 			echo json_encode([
@@ -120,8 +124,8 @@ class Livro extends BaseController
 	}
 
 	/**
-	 * Excluir o Livro
-	 * @param int codl
+	 * Função para excluir o Livro
+	 * @access public
 	 * @return void
 	 */
 	public function excluir()
@@ -159,7 +163,14 @@ class Livro extends BaseController
 		}
 	}
 
-	private function tratarDados(array $dados)
+	/**
+	 * Função para formatar o valor do livro para o padrão SQL
+	 * substituindo a ',' dos decimais por '.'
+	 * @param array $dados
+	 * @access private
+	 * @return array
+	 */
+	private function tratarDados(array $dados): array
 	{
 		if (isset($dados['valor'])) {
 			$valor = str_replace(['.', ','], ['', '.'], $dados['valor']);
@@ -167,9 +178,17 @@ class Livro extends BaseController
 			$dados['valor'] = floatval($valor);
 		}
 
-		return $dados;
+		return $dados ?? [];
 	}
 
+	/**
+	 * Função para inserir o(s) autor(es) do livro
+	 * Em caso de update remove as relações livro <-> autor já existentes e grava as novas
+	 * @param array $livro - Dados do livro
+	 * @param ?int $id - ID do livro
+	 * @access private
+	 * @return void
+	 */
 	private function inserirAutores(array $livro, int $id = null)
 	{
 		try {
@@ -186,6 +205,14 @@ class Livro extends BaseController
 		}
 	}
 
+	/**
+	 * Função para inserir o(s) assunto(s) do livro
+	 * Em caso de update remove as relações livro <-> assunto já existentes e grava as novas
+	 * @param array $livro - Dados do livro
+	 * @param ?int $id - ID do livro
+	 * @access private
+	 * @return void
+	 */
 	private function inserirAssuntos(array $livro, int $id = null)
 	{
 		try {

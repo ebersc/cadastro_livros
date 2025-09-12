@@ -9,6 +9,11 @@ use App\Models\Assunto;
 
 class RelatorioLivros extends BaseController
 {
+    /**
+     * Função que exibe a tela inicial do relatorio
+     * com os filtros e o datatable
+     * @access public
+    */
     public function index()
     {
         $livros   = (new LivroModel())->buscarTodos();
@@ -24,7 +29,15 @@ class RelatorioLivros extends BaseController
 		return view('relatorio/filtros', $dados);
     }
 
-    private function montarWhere($dados): string
+
+    /**
+     * Função que recebe os parametros para filtrar a busca
+     * e montar o relatório
+     * @access private
+     * @param array $dados
+     * @return string
+     */
+    private function montarWhere(array $dados): string
     {
         $where = [];
         if(!empty($dados['autor'])){
@@ -42,6 +55,11 @@ class RelatorioLivros extends BaseController
         return implode(" AND ", $where);
     }
 
+    /**
+     * Função que realiza a busca e retorna os dados para exibir o relatório em tela
+     * @access public
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
     public function datatables()
     {
         $db      = \Config\Database::connect();

@@ -9,6 +9,7 @@ class Assunto extends BaseController
 {
     /**
      * Listagem dos assuntos cadastrados
+     * @access public
      */
     public function index()
     {
@@ -23,6 +24,7 @@ class Assunto extends BaseController
 
     /**
      * Exibir o formulario de cadastro
+     * @access public
      */
     public function cadastrar()
     {
@@ -35,8 +37,9 @@ class Assunto extends BaseController
     }
 
     /**
-     * Buscar os dados do assunto
+     * Buscar os dados do assunto e exibir formulario de edição
      * @param int $id
+     * @access public
      */
     public function editar(int $id)
     {
@@ -53,7 +56,8 @@ class Assunto extends BaseController
     }
 
     /**
-     * Gravar ou atualizar o assunto
+     * Gravar ou atualizar o assunto na base de dados
+     * @access public
      * @return void
      */
     public function salvar()
@@ -76,13 +80,13 @@ class Assunto extends BaseController
             log_message('error', 'Erro de dados: ' . $e->getMessage());
             echo json_encode([
                 'status' => 500,
-                'message' => "Erro ao salvar o assunto!"
+                'message' => 'Erro de dados: ' . $e->getMessage()
             ]);
         } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
             log_message('error', 'Erro de banco: ' . $e->getMessage());
             echo json_encode([
                 'status' => 500,
-                'message' => "Erro ao salvar o assunto!"
+                'message' => 'Erro de banco: ' . $e->getMessage()
             ]);
         } catch (\Exception $e) {
             echo json_encode([
@@ -112,13 +116,13 @@ class Assunto extends BaseController
             log_message('error', 'Erro de dados: ' . $e->getMessage());
             echo json_encode([
                 'status' => 500,
-                'message' => "Erro ao excluir o assunto!"
+                'message' => 'Erro de dados: ' . $e->getMessage()
             ]);
         } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
             log_message('error', 'Erro de banco: ' . $e->getMessage());
             echo json_encode([
                 'status' => 500,
-                'message' => "Erro ao excluir o assunto!"
+                'message' => 'Erro de banco: ' . $e->getMessage()
             ]);
         } catch (\Exception $e) {
             echo json_encode([
